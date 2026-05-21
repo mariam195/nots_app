@@ -11,11 +11,12 @@ class AddNotesCubit extends Cubit<AddNotesState> {
     emit(AddNotesLoaded());
     try {
       var noteBox = Hive.box<NoteModel>(kNoteox);
+     
       emit(AddNotesLoaded());
       await noteBox.add(note);
     } catch (e) {
+       
       AddNotesError(e.toString());
-     
     }
   }
 }
