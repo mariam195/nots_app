@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:note_app/cubits/notes_cubit/notes_cubit_cubit.dart';
+import 'package:note_app/models/note_model.dart';
 import 'package:note_app/views/edit_note_view.dart';
 
 class NoteItem extends StatelessWidget {
-  const NoteItem({super.key});
-
+  const NoteItem({super.key, required this.note});
+   final NoteModel note;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -12,14 +15,16 @@ class NoteItem extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (context) {
-              return const EditNoteView();
+              return  EditNoteView(
+                note: note,
+              );
             },
           ),
         );
       },
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.cyanAccent,
+          color: Color(note.color),
           borderRadius: BorderRadius.circular(16),
         ),
         child: Padding(
@@ -29,13 +34,13 @@ class NoteItem extends StatelessWidget {
             children: [
               ListTile(
                 title: Text(
-                  'flutter tips',
-                  style: TextStyle(color: Colors.black, fontSize: 30),
+                  note.title,
+                  style: const TextStyle(color: Colors.black, fontSize: 30),
                 ),
                 subtitle: Padding(
                   padding: const EdgeInsets.only(top: 16, bottom: 16),
                   child: Text(
-                    'Build your Career with Mariam hany',
+                    note.subTitle,
                     style: TextStyle(
                       color: Colors.black.withOpacity(.5),
                       fontSize: 20,
@@ -43,14 +48,17 @@ class NoteItem extends StatelessWidget {
                   ),
                 ),
                 trailing: IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    note.delete();
+                    BlocProvider.of<NotesCubit>(context).fetchAllNotes();
+                  },
                   icon: Icon(Icons.delete, color: Colors.black, size: 30),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.only(right: 24),
                 child: Text(
-                  'may 21 ,2026',
+                  note.date,
                   style: TextStyle(
                     color: Colors.black.withOpacity(.4),
                     fontSize: 24,
